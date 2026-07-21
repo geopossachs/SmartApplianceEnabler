@@ -5,9 +5,8 @@ steps:
 
 # build the project with maven
 - name: maven-package
-  image: node:22-bookworm
+  image: ringcentral/node:22.22.2-jdk11 #source: https://github.com/ringcentral-docker/node
   commands:
-    - apt update && apt install -y maven
     - java -version
     - mvn --version
     - mvn install:install-file -Dfile=lib/parent-1.0.0.pom -DpomFile=lib/parent-1.0.0.pom -Dpackaging=pom
