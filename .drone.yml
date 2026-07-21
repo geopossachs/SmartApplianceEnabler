@@ -1,0 +1,29 @@
+kind: pipeline
+name: default
+
+steps:
+
+# build the project with maven
+- name: maven-package
+  image: node:22-bookworm
+  commands:
+    - apt update && apt install -y maven
+    - java -version
+    - mvn --version
+    - mvn install:install-file -Dfile=lib/parent-1.0.0.pom -DpomFile=lib/parent-1.0.0.pom -Dpackaging=pom
+    - mvn install:install-file -Dfile=lib/seamless-http-1.0.0.jar -DpomFile=lib/seamless-http-1.0.0.pom
+    - mvn install:install-file -Dfile=lib/seamless-xml-1.0.0.jar -DpomFile=lib/seamless-xml-1.0.0.pom
+    - mvn install:install-file -Dfile=lib/seamless-util-1.0.0.jar -DpomFile=lib/seamless-util-1.0.0.pom
+    - mvn install:install-file -Dfile=lib/cling-2.0.0.pom -DpomFile=lib/cling-2.0.0.pom -Dpackaging=pom
+    - mvn install:install-file -Dfile=lib/cling-core-2.0.0.jar -DpomFile=lib/cling-core-2.0.0.pom
+    #
+    - mvn clean package -Pweb
+  volumes:
+  - name: maven-cache
+    path: /root/.m2
+
+
+volumes:
+  - name: maven-cache
+    host: 
+      path: /temp/drone/m2cache
