@@ -24,13 +24,26 @@ steps:
   - name: maven-cache
     path: /root/.m2
 
+# push an image to geopossachs/smart_appliance_enabler:{tag}
+- name: mirror__docker-publish
+  when:
+    repo:
+      - geopossachs/SmartApplianceEnabler
+    branch:
+      - feat/drone_ci
+  image: plugins/docker
+  settings:
+    repo: geopossachs/smart_appliance_enabler
+    tags: ${DRONE_BRANCH##feat/}
+    dockerfile: docker/Dockerfile
+    platform: linux/amd64,linux/arm64,linux/arm/v7
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+
 
 volumes:
   - name: maven-cache
     host: 
       path: /temp/drone/m2cache
-
-
-services:
-  - name: mosquitto
-    image: emqx/nanomq:0.25
