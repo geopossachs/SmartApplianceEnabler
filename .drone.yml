@@ -19,6 +19,8 @@ steps:
     - mvn install:install-file -Dfile=lib/cling-2.0.0.pom -DpomFile=lib/cling-2.0.0.pom -Dpackaging=pom
     - mvn install:install-file -Dfile=lib/cling-core-2.0.0.jar -DpomFile=lib/cling-core-2.0.0.pom
     #
+    - mvn help:evaluate -Dexpression=project.version -q -DforceStdout > .tags
+    #
     - mvn clean package -Pweb
   volumes:
   - name: maven-cache
@@ -31,10 +33,9 @@ steps:
       - geopossachs/SmartApplianceEnabler
     branch:
       - feat/drone_ci
-  image: plugins/docker
+  image: owncloudci/drone-docker-buildx
   settings:
     repo: geopossachs/smart_appliance_enabler
-    tags: ${DRONE_BRANCH##feat/}
     dockerfile: docker/Dockerfile
     platform: linux/amd64,linux/arm64,linux/arm/v7
     username:
