@@ -23,6 +23,8 @@ steps:
     - mvn help:evaluate -Dexpression=project.version -q -DforceStdout > .tags
     #
     - mvn clean package -Pweb
+    #
+    - ls -lisa
   volumes:
   - name: maven-cache
     path: /root/.m2
