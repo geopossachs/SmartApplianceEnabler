@@ -34,8 +34,7 @@ RUN adduser --no-create-home --disabled-password --disabled-login amperise \
     
 USER amperise
 
-RUN mkdir -p $SAE_INSTALL_DIR && \
-    curl -o $SAE_INSTALL_DIR/logback-spring.xml -L -k https://github.com/camueller/SmartApplianceEnabler/raw/master/run/logback-spring.xml
+COPY run/logback-spring.xml $SAE_INSTALL_DIR/logback-spring.xml
 
 COPY target/SmartApplianceEnabler-$SAE_VERSION.war $SAE_INSTALL_DIR/SmartApplianceEnabler-$SAE_VERSION.war
 
