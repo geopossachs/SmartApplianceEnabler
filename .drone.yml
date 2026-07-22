@@ -35,6 +35,9 @@ steps:
       - feat/drone_ci
   image: owncloudci/drone-docker-buildx
   privileged: true
+  commands:
+    # load value from file into env's of the step
+    - export PROJECT_VERSION=$(cat .tags)
   settings:
     repo: geopossachs/smart_appliance_enabler
     dockerfile: docker/Dockerfile
@@ -43,6 +46,8 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
+    build_args_from_env:
+      - PROJECT_VERSION
 
 
 volumes:
