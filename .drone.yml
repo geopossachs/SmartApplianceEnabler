@@ -37,8 +37,8 @@ steps:
       - feat/drone_ci
   image: owncloudci/drone-docker-buildx
   privileged: true
-  #environment:
-  #  PROJECT_VERSION: "2.5.0" #ToDo
+  environment:
+    PROJECT_VERSION: "2.5.0" #ToDo
   settings:
     repo: geopossachs/smart_appliance_enabler
     dockerfile: docker/Dockerfile
