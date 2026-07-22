@@ -19,12 +19,14 @@ steps:
     - mvn install:install-file -Dfile=lib/cling-2.0.0.pom -DpomFile=lib/cling-2.0.0.pom -Dpackaging=pom
     - mvn install:install-file -Dfile=lib/cling-core-2.0.0.jar -DpomFile=lib/cling-core-2.0.0.pom
     #
+    - echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" > .env
     - mvn help:evaluate -Dexpression=project.version -q -DforceStdout > .tags
     #
     - mvn clean package -Pweb
   volumes:
   - name: maven-cache
     path: /root/.m2
+
 
 # push an image to geopossachs/smart_appliance_enabler:{tag}
 - name: mirror__docker-publish
@@ -35,9 +37,8 @@ steps:
       - feat/drone_ci
   image: owncloudci/drone-docker-buildx
   privileged: true
-  commands:
-    # load value from file into env's of the step
-    - export PROJECT_VERSION=$(cat .tags)
+  #environment:
+  #  PROJECT_VERSION: "2.5.0" #ToDo
   settings:
     repo: geopossachs/smart_appliance_enabler
     dockerfile: docker/Dockerfile
