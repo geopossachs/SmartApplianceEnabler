@@ -37,6 +37,6 @@ USER amperise
 RUN mkdir -p $SAE_INSTALL_DIR && \
     curl -o $SAE_INSTALL_DIR/logback-spring.xml -L -k https://github.com/camueller/SmartApplianceEnabler/raw/master/run/logback-spring.xml
 
-COPY src/target/SmartApplianceEnabler-$SAE_VERSION.war $SAE_INSTALL_DIR/SmartApplianceEnabler-$SAE_VERSION.war
+COPY /drone/src/target/SmartApplianceEnabler-$SAE_VERSION.war $SAE_INSTALL_DIR/SmartApplianceEnabler-$SAE_VERSION.war
 
 CMD java $JAVA_OPTS -Djava.awt.headless=true -Xmx256m -Dsae.home=$SAE_HOME -Dlogging.config=$SAE_INSTALL_DIR/logback-spring.xml -jar $SAE_INSTALL_DIR/SmartApplianceEnabler-$SAE_VERSION.war
