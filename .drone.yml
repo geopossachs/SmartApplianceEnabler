@@ -7,6 +7,8 @@ steps:
 # build the project with maven
 - name: maven-package
   image: ringcentral/node:22.22.2-jdk11 #source: https://github.com/ringcentral-docker/node
+  environment:
+    TZ: "Europe/Berlin"
   commands:
     - java -version
     - mvn --version
