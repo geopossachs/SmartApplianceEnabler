@@ -40,7 +40,8 @@ steps:
   image: owncloudci/drone-docker-buildx
   privileged: true
   environment:
-    PROJECT_VERSION: "2.5.0" #ToDo
+    APP_VERSION: '$(cat .tags)'
+    #PROJECT_VERSION: "2.5.0" #ToDo
   settings:
     repo: geopossachs/smart_appliance_enabler
     dockerfile: docker/Dockerfile
@@ -53,6 +54,7 @@ steps:
     password:
       from_secret: docker_password
     build_args_from_env:
+      - APP_VERSION
       - PROJECT_VERSION
 
 
