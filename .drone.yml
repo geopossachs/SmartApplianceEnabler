@@ -1,0 +1,57 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+
+# build the project with maven
+- name: maven-package
+  image: ringcentral/node:22.22.2-jdk11 #source: https://github.com/ringcentral-docker/node
+  environment:
+    TZ: "Europe/Berlin"
+  commands:
+    - java -version
+    - mvn --version
+    - mvn install:install-file -Dfile=lib/parent-1.0.0.pom -DpomFile=lib/parent-1.0.0.pom -Dpackaging=pom
+    - mvn install:install-file -Dfile=lib/seamless-http-1.0.0.jar -DpomFile=lib/seamless-http-1.0.0.pom
+    - mvn install:install-file -Dfile=lib/seamless-xml-1.0.0.jar -DpomFile=lib/seamless-xml-1.0.0.pom
+    - mvn install:install-file -Dfile=lib/seamless-util-1.0.0.jar -DpomFile=lib/seamless-util-1.0.0.pom
+    - mvn install:install-file -Dfile=lib/cling-2.0.0.pom -DpomFile=lib/cling-2.0.0.pom -Dpackaging=pom
+    - mvn install:install-file -Dfile=lib/cling-core-2.0.0.jar -DpomFile=lib/cling-core-2.0.0.pom
+    #
+    - mvn help:evaluate -Dexpression=project.version -q -DforceStdout > .tags
+    #
+    - mvn clean package -Pweb
+    #
+    - ls -lisa
+  volumes:
+  - name: maven-cache
+    path: /root/.m2
+
+
+# push an image to geopossachs/smart_appliance_enabler:{tag}
+- name: mirror__docker-publish
+  when:
+    repo:
+      - geopossachs/SmartApplianceEnabler
+    branch:
+      - feat/drone_ci
+  image: owncloudci/drone-docker-buildx
+  privileged: true
+  settings:
+    repo: geopossachs/smart_appliance_enabler
+    dockerfile: docker/Dockerfile
+    platforms:
+      - linux/amd64
+      - linux/arm64
+      - linux/arm/v7
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+
+
+volumes:
+  - name: maven-cache
+    host: 
+      path: /temp/drone/m2cache
