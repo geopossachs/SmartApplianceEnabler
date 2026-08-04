@@ -19,7 +19,6 @@ steps:
     - mvn install:install-file -Dfile=lib/cling-2.0.0.pom -DpomFile=lib/cling-2.0.0.pom -Dpackaging=pom
     - mvn install:install-file -Dfile=lib/cling-core-2.0.0.jar -DpomFile=lib/cling-core-2.0.0.pom
     #
-    - echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" > .env
     - mvn help:evaluate -Dexpression=project.version -q -DforceStdout > .tags
     #
     - mvn clean package -Pweb
@@ -39,9 +38,6 @@ steps:
       - feat/drone_ci
   image: owncloudci/drone-docker-buildx
   privileged: true
-  environment:
-    APP_VERSION: '$(cat .tags)'
-    #PROJECT_VERSION: "2.5.0" #ToDo
   settings:
     repo: geopossachs/smart_appliance_enabler
     dockerfile: docker/Dockerfile
@@ -53,9 +49,6 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
-    build_args_from_env:
-      - APP_VERSION
-      - PROJECT_VERSION
 
 
 volumes:
